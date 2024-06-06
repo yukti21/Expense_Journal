@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense and Income Diary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .positive {
+            color: green;
+        }
+        .negative {
+            color: red;
+        }
+        .header-image {
+            width: 100vw; /* Set width to 100% of viewport width */
+            height: 200px; /* Maintain aspect ratio */
+            object-fit: cover;
+            display: block; /* Ensure it behaves as a block element */
+        }
+    </style>
+</head>
+<body>
+    <img src="{{ url_for('static', filename='b1.jpeg') }}" alt="Your Image" class="header-image">
+    <h1>Expense and Income Diary</h1>
+    
+    <form action="/add" method="post">
+        <input type="text" name="description" placeholder="Description" required>
+        <input type="number" name="amount" placeholder="Amount" step="0.01" required>
+        <select name="type">
+            <option value="expense">Expense</option>
+            <option value="income">Income</option>
+        </select>
+        <button type="submit">Add Transaction</button>
+    </form>
+
+    <table>
+        <tr>
+            <th>Description</th>
+            <th>Amount</th>
+            <th>Type</th>
+            <th>Actions</th>
+        </tr>
+        {% for transaction in transactions %}
+        {% if transaction['amount'] != 0 %}
+        <tr>
+            <td>{{ transaction['description'] }}</td>
+            <td>{{ transaction['amount'] }}</td>
+            <td>{{ transaction['type'] }}</td>
+            <td>
+                <a href="/edit/{{ transaction['id'] }}">Edit</a>
+                <a href="/delete/{{ transaction['id'] }}">Delete</a>
+            </td>
+        </tr>
+        {% endif %}
+        {% endfor %}
+        <tr>
+            <td colspan="4" style="text-align: right;">
+                <strong>Total Expense:</strong> <span class="negative">{{ total_expense }}</span>
+                <br>
+                <strong>Total Income:</strong> <span class="positive">{{ total_income }}</span>
+                <br>
+                <strong>Balance:</strong> <span class="{% if balance >= 0 %}positive{% else %}negative{% endif %}">
+                    {{ balance }}
+                </span>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

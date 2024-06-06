@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Transaction</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <h1>Edit Transaction</h1>
+    
+    <form action="/edit/{{ transaction['id'] }}" method="post">
+        <input type="text" name="description" placeholder="Description" value="{{ transaction['description'] }}" required>
+        <input type="number" name="amount" placeholder="Amount" step="0.01" value="{{ transaction['amount'] }}" required>
+        <select name="type">
+            <option value="expense" {% if transaction['type'] == 'expense' %} selected {% endif %}>Expense</option>
+            <option value="income" {% if transaction['type'] == 'income' %} selected {% endif %}>Income</option>
+        </select>
+        <button type="submit">Update Transaction</button>
+    </form>
+</body>
+</html>
